@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="#" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ROS2-BDI</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <link href="css/ros2-bdi-info.css" rel="stylesheet" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://kit.fontawesome.com/171297eea6.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">ROS2-BDI</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#home">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#architecture">Architecture</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#docs">Docs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contacts.html">Contacts</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0">
+      <div class="root">
+        <div class="text-center m-auto mt-5 container-fluid">
+          <br />
+          <h1 class="ubuntu-mono fw-bold">ROS2-BDI</h1>
+          <h4 class="ubuntu-mono">
+            A planning based Multi-Agent BDI architecture for ROS2
+          </h4>
+          <hr />
+
+          <section id="home">
+            <h5>What is it?</h5>
+            <p class="text-start">
+              <span class="fw-bold">ROS2-BDI</span> is a
+              <span class="fw-bold">MAS</span> (Multi Agent System)
+              <span class="fw-bold">framework</span> aiming to run on top of
+              <a href="https://docs.ros.org/en/foxy/index.html">ROS2 Foxy</a>,
+              emulating the
+              <a
+                href="https://www.researchgate.net/publication/2362946_Modeling_Rational_Agents_within_a_BDI-Architecture"
+                >BDI architecture</a
+              >
+              for implementing the agents' behaviour. The framework makes usage
+              of an automated
+              <a href="https://planning.wiki/ref/pddl21">PDDL</a> planner for
+              computing plans in the means-end reasoning phase. Specifically it
+              uses
+              <a
+                href="https://intelligentroboticslab.gsyc.urjc.es/ros2_planning_system.github.io/design/index.html"
+                >PlanSys2</a
+              >, a planning system designed and deployed on top of ROS2, taking
+              inspiration from what was ROSPlan represented for the first
+              version of ROS. <br />
+              The BDI-PDDL is certainly a synergic duo, allowing to boost the
+              adaptability of any agent, so that the course of actions it has to
+              take to reach a certain goal are computed at run time based on its
+              skillset and the current known environment. Moreover, the
+              interactions among different actors have been accounted for and
+              properly facilitated, so that the designed agents can reach out to
+              their peers whenever the fulfillment of a desire involves an
+              ability out of their scope.
+              <br /><br />
+              Product is still under development by a research team based in the
+              <span class="fw-bold">University of Trento</span>. First results
+              are promising, since arisen flaws don’t question in any way the
+              strength of the idea, they indeed ignite sparks enlighting the
+              steps on the road to realize a viable product for the market,
+              ready for the general purpose use in industrial as well as private
+              applications. Platform is open, can be tested and used by other
+              teams.
+              <span class="fw-bold fst-italic">
+                Mentions and contributions are hugely appreciated.</span
+              >
+              <a href="https://github.com/devis12/ROS2-BDI">Here</a> the repo
+              with the source code for the respective ROS2 packages and the
+              instruction for building and testing it.
+            </p>
+          </section>
+
+          <section id="architecture">
+            <h5 class="fw-bold">Architecture</h5>
+
+            <p class="text-start">
+              The image below represents the typical architecture characterizing
+              every running agent in the proposed solution. The structure of
+              <span class="fst-italic">agent_n</span> is zoomed, while the ones
+              of <span class="fst-italic">agent_s</span> and
+              <span class="fst-italic">agent_t</span> are not. However,
+              conceptually speaking, they are all the same for what concerns
+              their core behaviours and possibilities. All the circles are ROS2
+              nodes, the rectangles depict ROS2 topics and the ellipses within
+              the red boundaries are PlanSys2’s nodes. Every running ROS2 BDI
+              agent is going to have its own independent instance of PlanSys2.
+              The <span class="text-green">core nodes</span> are represented by
+              the five green circles, while all the
+              <span class="text-teal"
+                >agent-specific nodes (sensors, actions)</span
+              >
+              have a teal-blue colored background. While the firsts will always
+              be the same five regardless of the agent’s specific tasks, the
+              actions and sensors nodes strongly depend on them, hence their
+              number and functionalities will differ from agent to agent.
+              Nonetheless, it’s true that core nodes expose parameters that will
+              allow to properly tune their behaviour, hence the agent’s one with
+              respect to the scenario and environment in which it’s put in will
+              require. Each topic or service name presents as its prefix the
+              <span class="font-monospace">agent_id</span>, which is also the
+              value of the namespace in which all the respective nodes for the
+              agent are loaded. There are topics for beliefs and desires: one
+              ”channel” for triggering the addition callback and one for the
+              deletion, while another one serves the purpose to regularly notify
+              about the current status of the respective desire/belief set. The
+              topic
+              <span class="font-monospace">agent_id/plan_execution</span> info
+              shows updates regarding the currently running plan execution; it
+              consists of a special null message (e.g. no action executing,
+              empty body plan) if there isn’t any and the agent is in
+              idle-state. The topic
+              <span class="font-monospace text-danger"
+                >agent_id/plansys2_state</span
+              >
+              state could be considered as a utility extension to PlanSys2 in
+              order to make it easier to know if one of its nodes is ”active” or
+              not.
+            </p>
+
+            <div class="row">
+              <div id="div-architecture" class="col-xxl-6">
+                <img
+                  id="img-architecture"
+                  src="img/architecture.png"
+                  style="vertical-align: middle"
+                  class="rounded img-fluid w-100 mx-auto"
+                  alt="Architecture for ROS2-BDI"
+                />
+              </div>
+
+              <div id="div-node-tables" class="col-xxl-6">
+                <h6 class="text-green mt-3">Core nodes</h6>
+                <table class="table table-striped">
+                  <thead class="thead-core">
+                    <tr>
+                      <th scope="col" style="width: 20%">Core Node</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">PlanSys2 Monitor</th>
+                      <td>
+                        Regularly calls PlanSys2 nodes’ services to check their
+                        respective status and publishes them to
+                        <span class="font-monospace text-danger"
+                          >agent_id/plansys2</span
+                        >
+                        state (ALL core nodes are subscribed to it).
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Belief Manager</th>
+                      <td>
+                        It manages the agent’s beliefs: from initialization to
+                        handling the callbacks behind
+                        <span class="font-monospace">agent_id/add_belief</span>
+                        and
+                        <span class="font-monospace">agent_id/add_belief</span>
+                        topics, periodically publishing the belief set to
+                        <span class="font-monospace">agent_id/belief_set</span>.
+                        The core of its job regards keeping the PDDL problem and
+                        the belief set aligned by exchanging information with
+                        PlanSys2’s Problem Expert node.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Scheduler</th>
+                      <td>
+                        It manages the agent’s desires: from initialization to
+                        handling the callbacks behind
+                        <span class="font-monospace">agent_id/add_desire</span>
+                        and
+                        <span class="font-monospace">agent_id/del_desire</span>
+                        topics, periodically publishing the desire set to
+                        <span class="font-monospace">agent_id/desire_set</span>.
+                        The core of its job involves selecting the new plan to
+                        be executed (computed by PlanSys2’s Planner) in order to
+                        fulfill a desire and checking for desires’ satisfaction.
+                        It triggers, monitors and/or aborts the plan execution
+                        via the Plan Executor node.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Plan Director</th>
+                      <td>
+                        Handles plan execution and abortion requests to be
+                        forwarded to PlanSys2’s Executor. Regularly notifies its
+                        progress status to other nodes, checks for context
+                        conditions to be satisfied and restores internal state
+                        if the plan is aborted.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Communication</th>
+                      <td>
+                        Handles belief or desire addition/deletion requests
+                        forwarded by other agents, enforcing the specified
+                        policies to decide what can be accepted and what has to
+                        be rejected or (partially) redefined
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <h6 class="text-teal mt-3">Agent-specific nodes (skills)</h6>
+                <table class="table table-striped">
+                  <thead class="thead-skills">
+                    <tr>
+                      <th scope="col" style="width: 20%">Skill Node</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Sensor</th>
+                      <td>
+                        Regularly performs a sensing operation which leads to
+                        request an addition, a deletion or an update within the
+                        belief set via the
+                        <span class="font-monospace">agent_id/add_belief</span>
+                        and
+                        <span class="font-monospace">agent_id/del_belief</span>
+                        topics.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Action Executor</th>
+                      <td>
+                        Handles the execution advancement of an action.
+                        Triggered by PlanSys2’s Executor, communicate with it to
+                        notify about its progress, failure or success status.
+                        Requests toward other agents, calling the respective
+                        services of their Communication node, are performed
+                        within an agent’s action. API calls to do that need to
+                        be supplied.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 font-small text-light">
+      <div class="container footer-copyright text-center">
+        © 2021 Copyright:
+        <a style="color: white" href="mailto:devisdalmoro@gmail.com"
+          >Dal Moro Devis</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>

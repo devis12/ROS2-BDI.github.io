@@ -1,0 +1,76 @@
+@font-face {
+  font-family: Ubuntu-Mono;
+  src: ".ttf/UbuntuMono-R.ttf";
+}
+
+.ubuntu-mono {
+  font-family: Ubuntu-Mono;
+}
+
+body {
+  background: radial-gradient(circle, #eedfc5 0%, #fff8e1 50%, #eedfc5 100%);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.root {
+  min-height: calc(100vh - 3rem);
+}
+
+.py-3 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+nav {
+  height: 3.2rem !important;
+}
+
+section {
+  padding-top: 3.2rem !important;
+}
+
+#architecture {
+  padding-bottom: 1rem !important;
+}
+
+nav,
+footer {
+  background: radial-gradient(circle, #7a1d00 0%, #ff7d47 50%, #7a1d00 100%);
+}
+
+.thead-core {
+  background: #42c754;
+  color: white;
+}
+
+.thead-skills {
+  background: #088f8f;
+  color: white;
+}
+
+.brandIcon {
+  max-width: 48px;
+  max-height: 48px;
+}
+
+.text-green {
+  color: #42c754;
+}
+
+.text-teal {
+  color: #088f8f;
+}
+
+td,
+th {
+  vertical-align: middle;
+}
+
+footer {
+  height: 3rem !important;
+  margin-top: -3rem !important;
+}
