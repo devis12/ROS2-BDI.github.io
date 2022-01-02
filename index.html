@@ -63,13 +63,16 @@
                 <a class="nav-link" href="#architecture">Architecture</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#docs">Docs</a>
+                <a class="nav-link" href="docs.html#docs">Docs</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="contacts.html">Contacts</a>
               </li>
             </ul>
           </div>
+          <button class="btn btn-dark">
+            <i class="fab fa-github"></i> Repository
+          </button>
         </div>
       </nav>
     </header>
@@ -86,7 +89,7 @@
           <hr />
 
           <section id="home">
-            <h5>What is it?</h5>
+            <h4 class="fw-bold">What is it?</h4>
             <p class="text-start">
               <span class="fw-bold">ROS2-BDI</span> is a
               <span class="fw-bold">MAS</span> (Multi Agent System)
@@ -135,7 +138,7 @@
           </section>
 
           <section id="architecture">
-            <h5 class="fw-bold">Architecture</h5>
+            <h4 class="fw-bold">Architecture</h4>
 
             <p class="text-start">
               The image below represents the typical architecture characterizing
@@ -203,7 +206,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row">PlanSys2 Monitor</th>
+                      <td>PlanSys2 Monitor</td>
                       <td>
                         Regularly calls PlanSys2 nodes’ services to check their
                         respective status and publishes them to
@@ -214,7 +217,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Belief Manager</th>
+                      <td>Belief Manager</td>
                       <td>
                         It manages the agent’s beliefs: from initialization to
                         handling the callbacks behind
@@ -229,7 +232,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Scheduler</th>
+                      <td>Scheduler</td>
                       <td>
                         It manages the agent’s desires: from initialization to
                         handling the callbacks behind
@@ -246,7 +249,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Plan Director</th>
+                      <td>Plan Director</td>
                       <td>
                         Handles plan execution and abortion requests to be
                         forwarded to PlanSys2’s Executor. Regularly notifies its
@@ -256,7 +259,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Communication</th>
+                      <td>Communication</td>
                       <td>
                         Handles belief or desire addition/deletion requests
                         forwarded by other agents, enforcing the specified
@@ -277,7 +280,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row">Sensor</th>
+                      <td>Sensor</td>
                       <td>
                         Regularly performs a sensing operation which leads to
                         request an addition, a deletion or an update within the
@@ -289,7 +292,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <th scope="row">Action Executor</th>
+                      <td>Action Executor</td>
                       <td>
                         Handles the execution advancement of an action.
                         Triggered by PlanSys2’s Executor, communicate with it to

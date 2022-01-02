@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="#" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ROS2-BDI</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+
+    <link href="css/ros2-bdi-info.css" rel="stylesheet" />
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://kit.fontawesome.com/171297eea6.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+
+  </head>
+  <body>
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="index.html">ROS2-BDI</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+              <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="index.html#home"
+                  >Home</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="index.html#architecture">Architecture</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="docs.html#docs">Docs</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="contacts.html">Contacts</a>
+              </li>
+            </ul>
+            <button class="btn btn-dark">
+            <i class="fab fa-github"></i> Repository
+          </button>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main class="flex-shrink-0">
+      <div class="root">
+        <div class="text-center m-auto mt-5 container-fluid">
+          <br />
+          <h1 class="ubuntu-mono fw-bold">ROS2-BDI</h1>
+          <h4 class="ubuntu-mono">
+            A planning based Multi-Agent BDI architecture for ROS2
+          </h4>
+          <hr />
+          <div class="row mx-auto">
+            <div class="docs-menu col-md-2 ml-3 flex-shrink-0 p-3 bg-lighter text-start">
+               <div class="d-flex align-items-center pb-3 mb-3 text-dark fw-bold text-decoration-underline">
+                  <h5>Docs menu</h5>
+               </div>
+              <ul class="list-unstyled ps-0">
+                
+                <li class="mb-1">
+                  <a href="docs.html#docs-intro" class="btn btn-toggle align-items-center rounded collapsed">
+                    Intro
+                  </a>
+                </li>
+
+                <li class="mb-1">
+                  <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#messages-collapse" aria-expanded="false">
+                    Messages
+                  </button>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="collapse" id="messages-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="#belief" class="link-dark rounded">Belief</a></li>
+                          <li><a href="#condition" class="link-dark rounded">Condition</a></li>
+                          <li><a href="#desire" class="link-dark rounded">Desire</a></li>
+                          <li><a href="#plan" class="link-dark rounded">Plan</a></li>
+                          <li><a href="#plan-exec" class="link-dark rounded">Plan Execution</a></li>
+                          <li><a href="#action-exec" class="link-dark rounded">Action Execution</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-1">
+                  <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#skills-collapse" aria-expanded="false">
+                    Agent Skills
+                  </button>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="collapse" id="skills-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="skills.html#sensors" class="link-dark rounded">Sensors</a></li>
+                          <li><a href="skills.html#actions" class="link-dark rounded">Actions</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <li class="mb-1">
+                  <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" data-bs-target="#bringup-collapse" aria-expanded="false">
+                    Bringup
+                  </button>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="collapse" id="bringup-collapse">
+                        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                          <li><a href="bringup.html#pddl" class="link-dark rounded">PDDL domain example</a></li>
+                          <li><a href="bringup.html#python" class="link-dark rounded">Python bringup example</a></li>
+                          <li><a href="bringup.html#params" class="link-dark rounded">Tunable parameters</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+            
+            <div class="col-md-2"></div>
+            <div class="col-md-10">
+              <div id="docs-messages">
+                <h4>Messages</h4>
+
+                <div class="container-fluid text-start">
+                    <section id="belief">
+                        <div class="mb-3">
+                            <h5>Belief</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">Belief.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>name</td>
+                                                <td>string</td>
+                                            </tr>
+                                            <tr>
+                                                <td>pddl_type</td>
+                                                <td>uint8</td>
+                                            </tr>
+                                            <tr>
+                                                <td>params</td>
+                                                <td>string[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>value</td>
+                                                <td>float32</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>Each belief represents either a PDDL instance, a PDDL predicate
+                                                    or a PDDL fluent.</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">name</span> 
+                                                        indicates the name of the respective instance, predicate or fluent
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">pddl_type</span> 
+                                                        used to decide whether the belief is a PDDL instance, a PDDL predicate
+                                                        or a PDDL fluent, restricting the range of valid values among three distinct integers, respectively we have: 
+                                                        <ul class="list-unstyled ps-0">
+                                                            <li><span class="font-monospace">1 -> INSTANCE_TYPE</span></li>
+                                                            <li><span class="font-monospace">2 -> PREDICATE_TYPE</span></li>
+                                                            <li><span class="font-monospace">3 -> FLUENT_TYPE</span></li>
+                                                        </ul>
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">params</span> expresses the arguments of the predicate or fluent in case the 
+                                                        belief refers to one of these two types, while it consists of a single element in case of instance belief-type, representing the type of the
+                                                        instance itself (e.g. waypoint, car,..)
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">value</span> has real meaning just in the
+                                                        case of fluent belief-type, expressing the real number associated with the function instance
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            The topics <span class="font-monospace">agent_id/add_belief</span> and <span class="font-monospace">agent_id/del_belief</span> handle 
+                                                            <span class="font-monospace">Belief</span> messages, respectively representing a belief to be added and a belief to be deleted.
+                                                        </li>
+                                                        <li>
+                                                            The topic <span class="font-monospace">agent_id/belief_set</span> outputs messages in the form of 
+                                                            <span class="font-monospace">BeliefSet</span>, which is simply a list of Belief as expressed here.
+                                                        </li>
+                                                        <li>
+                                                            Each <a href="#condition">condition</a> withold a belief that needs to be checked.
+                                                        </li>
+                                                        <li>
+                                                            Each <a href="#desire">desire</a>'s value is nonetheless than a targeted list of beliefs that the agent would like to make true.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    <section id="condition">
+                        <div class="mb-3">
+                            <h5>Condition</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">Condition.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>condition_to_check</td>
+                                                <td><a class="text-white" href="#belief">Belief</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>check</td>
+                                                <td>string</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Represents a check to be performed, e.g. before or
+                                                    during the execution of a plan (respectively preconditions or context conditions). 
+                                                    The evaluation is going to be performed against the belief set of the agent. 
+                                                    Different check operations can be applied depending on the belief-type.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">condition_to_check</span> is the belief upon which the
+                                                        check needs to be performed
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">check</span> is a string which accepts exclusively one among
+                                                        the following values {"EX", "T", "F", "EQ", "GR", "LE", "GREQ", "LEQ"}. In order:
+                                                        <ul>
+                                                            <li>"EX" stands for 'exists' and it is used to check for the presence of a specific instance-type belief within the belief set</li>
+                                                            <li>"T", "F" respectively stand for 'true' and 'false' and they are used to assess the truth of a certain relation, expressed as a predicate-type belief within the belief set</li>
+                                                            <li>"EQ", "GR", "LE", "GREQ", "LEQ" respectively stand for 'equals', 'greater', 'less', 'greater or equal' and 'less or equal' and they are used to check against the value of a specific fluent-type belief within the belief set. Check always returns false if the latter is not present there.</li>
+                                                        </ul>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            Can be grouped in a list representing conjunctive (i.e. all must be verified) or disjunctive (i.e. at least one must be verified) expressions.
+                                                            ROS2-BDI uses <span class="font-monospace">ConditionsConjunction</span> as a message witholding a list of  <span class="font-monospace">Condition</span>
+                                                            as <span class="font-monospace">literals</span> in conjunction among each other.
+                                                        </li>
+                                                        <li>
+                                                            Can be grouped in a list of list representing <a href="https://en.wikipedia.org/wiki/Disjunctive_normal_form">DNF expressions</a>.
+                                                            ROS2-BDI uses <span class="font-monospace">ConditionsDNF</span> as a message witholding a list of  <span class="font-monospace">ConditionsConjunction</span>
+                                                            as <span class="font-monospace">clauses</span> in disjunction among each other.
+                                                        </li>
+                                                        </li>
+                                                        <li>
+                                                            DNF expressions of <span class="font-monospace">Condition</span> (i.e. <span class="font-monospace">ConditionsDNF</span>) are currently used to state both the preconditions or the context condition of the <a href="#plan">plan</a>
+                                                            trying to fulfill a certain <a href="#desire">desire</a>.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    <section id="desire">
+                        <div class="mb-3">
+                            <h5>Desire</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">Desire.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>name</td>
+                                                <td>string</td>
+                                            </tr>
+                                            <tr>
+                                                <td>value</td>
+                                                <td><a class="text-white" href="#belief">Belief</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>priority</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>deadline</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>precondition</td>
+                                                <td><a class="text-white" href="#condition">ConditionsDNF</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>context</td>
+                                                <td><a class="text-white" href="#condition">ConditionsDNF</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>rollback_belief_add</td>
+                                                <td><a class="text-white" href="#belief">Belief</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>rollback_belief_del</td>
+                                                <td><a class="text-white" href="#belief">Belief</a>[]</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Represents a target state of the world that the agent might try to make true through the 
+                                                    enforcement of a computed plan to advance the current status toward the desired one.
+                                                    Additional properties are applied to express constraints and obligations strictly related
+                                                    to its fullfilment.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">name</span>
+                                                        is used to identify the desire within the desire set of the agent, hasn't any other implications.
+                                                        An agent <span class="fw-bold">cannot</span> have simultaneously two desires with the same name in its desire set.
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">value</span>
+                                                        list of <a href="#belief">beliefs</a> that represents the target state of the world that the desire is describing. Fulfilling
+                                                        the desire requires to make all of them true, i.e. meaning that at some point they need to be within the belief
+                                                        set of the agent in order to consider the desire fulfilled.
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">priority</span>
+                                                        real value in the <span class="font-monospace">[0-1]</span> range expressing the priority for the desire: the higher it is,
+                                                        the more important is to fulfilled the desire as soon as possible.
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">deadline</span>
+                                                        desired deadline for the desire to be fulfilled in. Currently <span class="fst-italic">relative to the plan execution</span> and not
+                                                        absolute (global).
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">precondition</span>
+                                                        list of <a href="#condition">conditions</a> that must be satisfied before the execution of any plan trying to fulfill the desire
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">context</span>
+                                                        list of <a href="#condition">conditions</a> that must be satisfied during the execution of any plan trying to fulfill the desire
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">rollback_belief_add</span>
+                                                        list of <a href="#belief">beliefs</a> to be added to the belief set of the agent to restore internal status in case of abortion of any plan trying to fulfill the desire                                                
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">rollback_belief_del</span>
+                                                        list of <a href="#belief">beliefs</a> to be removed from the belief set of the agent to restore internal status in case of abortion of any plan trying to fulfill the desire
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            The topics <span class="font-monospace">agent_id/add_desire</span> and <span class="font-monospace">agent_id/del_desire</span> handle 
+                                                            <span class="font-monospace">Desire</span> messages, respectively representing a desire to be added and a desire to be deleted.
+                                                        </li>
+                                                        <li>
+                                                            The topic <span class="font-monospace">agent_id/desire_set</span> outputs messages in the form of 
+                                                            <span class="font-monospace">DesireSet</span>, which is simply a list of Desire as expressed here.
+                                                        </li>
+                                                        <li>
+                                                            Each <a href="#plan">BDIPlan</a> and <a href="#plan-exec">BDIPlanExecutionInfo</a> message contains the target desire they're trying to fulfill
+                                                            through the enforcement of their actions.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    <section id="plan">
+                        <div class="mb-3">
+                            <h5>Plan</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">BDIPlan.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>target</td>
+                                                <td><a class="text-white" href="#desire">Desire</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>actions</td>
+                                                <td><a class="text-white" href="https://github.com/IntelligentRoboticsLabs/ros2_planning_system/blob/master/plansys2_msgs/msg/PlanItem.msg">plansys2_msgs/PlanItem</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>precondition</td>
+                                                <td><a class="text-white" href="#condition">ConditionsDNF</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>context</td>
+                                                <td><a class="text-white" href="#condition">ConditionsDNF</a>[]</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Static representation of a plan which either needs to be triggered or aborted.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">target</span>
+                                                        the <a href="#desire">desire</a> that the plan should fulfill through its enforcement
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">actions</span>
+                                                        list of <a href="https://github.com/IntelligentRoboticsLabs/ros2_planning_system/blob/master/plansys2_msgs/msg/PlanItem.msg">actions</a>
+                                                         as represented within the <a href="https://intelligentroboticslab.gsyc.urjc.es/ros2_planning_system.github.io/design/index.html">PlanSys2</a> framework
+                                                         (time, action, duration), so that it can then be easily fed to its Executor
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">precondition</span>
+                                                        list of <a href="#condition">conditions</a> that must be satisfied before the execution of the plan 
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">context</span>
+                                                        list of <a href="#condition">conditions</a> that must be satisfied during the execution of the plan 
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            The service <span class="font-monospace">agent_id/plan_execution</span> requires a static plan to be specified in the request
+                                                            compliant to the <span class="">BDIPlan</span> interface as expressed here. A trigger or abort operation is coupled with it
+                                                            and sent to the ROS2-BDI Plan Director which will process it.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    <section id="plan-exec">
+                        <div class="mb-3">
+                            <h5>Plan Execution</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">BDIPlanExecutionInfo.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>target</td>
+                                                <td><a class="text-white" href="#desire">Desire</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>actions</td>
+                                                <td><a class="text-white" href="#action-exec">BDIActionExecutionInfo</a>[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>current_time</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>estimated_deadline</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>status</td>
+                                                <td>uint8</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Dynamic representation of a currently running plan with info regarding its current execution status.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">target</span>
+                                                        the <a href="#desire">desire</a> that the plan should fulfill through its enforcement
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">actions</span>
+                                                        a list of the <a href="#action-exec">currently running actions</a> packed with data related to their execution status 
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">current_time</span>
+                                                        current time of execution <span class="fst-italic">relative to the plan start</span> (init as 0.0).
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">estimated_deadline</span>
+                                                        estimated deadline for the plan execution
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">status</span>
+                                                        simple integer coding the current status of the plan:
+                                                        
+                                                            <br />- <span class="font-monospace">0</span>: RUNNING
+                                                            <br />- <span class="font-monospace">1</span>: ABORTED
+                                                            <br />- <span class="font-monospace">2</span>: SUCCESSFUL
+                                                        
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            The topic <span class="font-monospace">agent_id/plan_execution_info</span> regularly post
+                                                            information regarding the currently running plan execution via a <span class="font-monospace">BDIPlanExecutionInfo</span> message type.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    <section id="action-exec">
+                        <div class="mb-3">
+                            <h5>Action Execution</h5>
+                            <div class="row mx-auto">
+
+                                <div class="col-md-4 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">BDIActionExecutionInfo.msg</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>index</td>
+                                                <td>uint16</td>
+                                            </tr>
+                                            <tr>
+                                                <td>name</td>
+                                                <td>string</td>
+                                            </tr>
+                                            <tr>
+                                                <td>args</td>
+                                                <td>string[]</td>
+                                            </tr>
+                                            <tr>
+                                                <td>planned_start</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>actual_start</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>exec_time</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>duration</td>
+                                                <td>float32</td>
+                                            </tr>
+                                            <tr>
+                                                <td>progress</td>
+                                                <td>float32</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>   
+                                </div>
+
+                                <div class="col-md-8">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Dynamic representation of a currently running action within a <a href="#plan-exec">plan execution</a>.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">index</span>
+                                                        index representing the action position within the original list of <span class="font-monospace">actions</span> in the <a href="#plan">static plan</a> representation for the currently running one
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">name</span>
+                                                        arguments of the action in execution
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">args</span>
+                                                        arguments for the action in execution
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">planned_start</span>
+                                                        states the planned time <span class="fst-italic">relative to the plan execution start</span> for the action to start
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">actual_start</span>
+                                                        states the actual time <span class="fst-italic">relative to the plan execution start</span> when the action started
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">exec_time</span>
+                                                        states the current time <span class="fst-italic">relative to the action execution start</span> 
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">duration</span>
+                                                        represents the estimated duration for the action execution
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">progress</span>
+                                                        indicates in the <span class="font-monospace">[0-1]</span> range the current percentage of completion for
+                                                        the action execution
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            Encapsulated as a list of currently running actions in the <span class="font-monospace">executing</span> property of 
+                                                            a <a href="#plan-exec">BDIPlanExecutionInfo</a> message.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            </div>
+          </div>
+          
+      </div>
+    </main>
+
+    <footer class="footer mt-auto py-3 font-small text-light">
+      <div class="container footer-copyright text-center">
+        © 2021 Copyright:
+        <a style="color: white" href="mailto:devisdalmoro@gmail.com"
+          >Dal Moro Devis</a
+        >
+      </div>
+    </footer>
+  </body>
+</html>
