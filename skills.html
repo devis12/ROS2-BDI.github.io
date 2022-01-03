@@ -181,7 +181,7 @@
 
                         <div class="container-fluid mb-5">
                           <h5 class="text-primary">Sensor constructor</h5>
-                          <code>Sensor(const std::string& sensor_name, const ros2_bdi_interfaces::msg::Belief& proto_belief);</code>
+                          <code><span class="fw-bold">Sensor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> sensor_name, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> proto_belief)</code>
                           <table class="table">
                             <thead class="bg-dark text-light">
                               <th scope="col" style="width: 20%;">Parameter</th>
@@ -278,7 +278,8 @@
                             parameters and it's supposed to withold the logic responsible for the sensing operations. If and when these require to update the belief set in 
                             some way, the <code>sense(belief, op)</code> API call is provided as described below and can be invoked within the <code>performSensing()</code> implementation.
                           </p>
-                          <code>void sense(const ros2_bdi_interfaces::msg::Belief& belief, const UpdOperation& op);</code>
+                          <code>  <span class="text-success">void</span>
+                                  <span class="fw-bold">sense</span>(<span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief, <span class="text-indigo">const</span> <span class="text-success">UpdOperation&</span> op)</code>
                           <table class="table">
                             <thead class="bg-dark text-light">
                               <th scope="col" style="width: 20%;">Parameter</th>
@@ -329,8 +330,230 @@
                         </div>
 
                     </section>
+
                     <section id="actions">
                         <h4>Actions</h4>
+                        <p>
+                          Setting up an action executor node for a ROS2-BDI agent can be seen as a little trickier, but hopefully the guide below will guide you through all the needed steps and available features.
+                          Any BDIActionExecutor node <span class="fw-bold">must</span> implement the virtual method <code>void doWork()</code> specified in the 
+                          provided abstract class from which it's inheriting. The call will be regularly called respecting the value of the corresponding init.
+                          parameters passed in the constructor and it's supposed to withold the logic responsible for the action advancement operations.
+                          Within the method implementation, any of the API methods (status/communication) provided below can be called.
+                        </p>
+                         <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Action constructor</h5>
+                          <code><span class="fw-bold">BDIActionExecutor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> action_name, <span class="text-indigo">const</span> <span class="text-success">int&</span> working_freq)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>action_name</code></td>
+                                <td>Name for the action; should match the one within the pddl domain definition</td>
+                              </tr>
+                              <tr>
+                                <td><code>working_freq</code></td>
+                                <td>Frequency at which the <span class="font-monospace">doWork</span> method is called (expressed in Hz)</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Action Executor progress/status methods</h5>
+
+                          <code><span class="text-success">std::vector&#60;std::string&#62; </span> <span class="fw-bold">getArguments</span>()</code>
+                          <p><span class="text-secondary fw-bold">returns</span> arguments of the actions</p>
+                          <hr/>
+
+                          <code><span class="text-success">float </span> <span class="fw-bold">getProgress</span>()</code>
+                          <p><span class="text-secondary fw-bold">returns</span> current progress state of the action in the <span class="font-monospace">[0-1]</span> range</p>
+                          <hr/>
+
+                          <code><span class="text-success">void </span> <span class="fw-bold">execSuccess</span>()</code>
+                          <p>Communicates action execution has successfully completed; no additional log provided</p>
+                          <hr/>
+                          
+                          <code><span class="text-success">void </span> <span class="fw-bold">execSuccess</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> success_log)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>success_log</code></td>
+                                <td>additional log for the successfully execution</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p>Communicates action execution has successfully completed; additional log provided</p>
+                          <hr/>
+                          
+                          <code><span class="text-success">void </span> <span class="fw-bold">execFailed</span>()</code>
+                          <p>Communicates action execution has aborted; no additional log provided</p>
+                          <hr/>
+                          
+                          <code><span class="text-success">void </span> <span class="fw-bold">execFailed</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> err_log)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>error_log</code></td>
+                                <td>additional log for the failed execution</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p>Communicates action execution has aborted; additional log provided</p>
+                          <hr/>
+                        </div>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Action Executor communication methods</h5>
+
+                          <code><a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/communications_structs.hpp" class="text-success">BDICommunications::CheckBeliefResult </a> <br />
+                              <span class="fw-bold">sendCheckBeliefRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_ref</code></td>
+                                <td><span class="font-monospace">agent_id</span> of the ROS2-BDI agent that is going to be queried with the request</td>
+                              </tr>
+                              <tr>
+                                <td><code>belief</code></td>
+                                <td>belief sent into the check request</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p><span class="text-secondary fw-bold">returns</span> whether update request has been <span class="font-mospace">accepted</span> and belief has been <span class="font-mospace">found</span> </p>
+                          <hr/>
+                          
+                          <code><a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/communications_structs.hpp" class="text-success">BDICommunications::UpdBeliefResult </a> <br />
+                              <span class="fw-bold">sendUpdBeliefRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief, <span class="text-indigo">const</span> <span class="text-success">BDICommunications::UpdOperation&</span> op)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_ref</code></td>
+                                <td><span class="font-monospace">agent_id</span> of the ROS2-BDI agent that is going to be queried with the request</td>
+                              </tr>
+                              <tr>
+                                <td><code>belief</code></td>
+                                <td>belief sent into the update request</td>
+                              </tr>
+                              <tr>
+                                <td><code>op</code></td>
+                                <td>specify whether the <code>belief</code> should be added or deleted; acceptable values among <span class="font-monospace">{ADD, DEL}</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p><span class="text-secondary fw-bold">returns</span> whether update request has been <span class="font-mospace">accepted</span> and <span class="font-mospace">performed</span> </p>
+                          <hr/>
+
+                          <code><a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/communications_structs.hpp" class="text-success">BDICommunications::CheckDesireResult </a> <br />
+                              <span class="fw-bold">sendCheckDesireRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_ref</code></td>
+                                <td><span class="font-monospace">agent_id</span> of the ROS2-BDI agent that is going to be queried with the request</td>
+                              </tr>
+                              <tr>
+                                <td><code>desire</code></td>
+                                <td>desire sent into the check request</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p><span class="text-secondary fw-bold">returns</span> whether update request has been <span class="font-mospace">accepted</span> and desire has been <span class="font-mospace">found</span> </p>
+                          <hr/>
+                          
+                          <code><a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/communications_structs.hpp" class="text-success">BDICommunications::UpdDesireResult </a> <br />
+                              <span class="fw-bold">sendUpdDesireRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire, <span class="text-indigo">const</span> <span class="text-success">BDICommunications::UpdOperation&</span> op, <span class="text-indigo">const</span> <span class="text-success">bool&</span> monitor_fulfill)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_ref</code></td>
+                                <td><span class="font-monospace">agent_id</span> of the ROS2-BDI agent that is going to be queried with the request</td>
+                              </tr>
+                              <tr>
+                                <td><code>desire</code></td>
+                                <td>desire sent into the update request</td>
+                              </tr>
+                              <tr>
+                                <td><code>op</code></td>
+                                <td>specify whether the <code>desire</code> should be added or deleted; acceptable values among <span class="font-monospace">{ADD, DEL}</span></td>
+                              </tr>
+                              <tr>
+                                <td><code>monitor_fulfill</code></td>
+                                <td>specify whether the action should monitor the fulfillment of the desire (in case it is added through the update)</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p><span class="text-secondary fw-bold">returns</span> whether update request has been <span class="font-mospace">accepted</span> and <span class="font-mospace">performed</span> </p>
+                          <hr/>
+                          
+                          <code><span class="text-success">bool </span>
+                              <span class="fw-bold">isMonitoredDesireFulfilled</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire)</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_ref</code></td>
+                                <td><span class="font-monospace">agent_id</span> of the ROS2-BDI agent that has been already queried with the corresponding <span class="font-monospace">ADD</span> desire request</td>
+                              </tr>
+                              <tr>
+                                <td><code>desire</code></td>
+                                <td>desire sent into the update request</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p><span class="text-secondary fw-bold">returns</span> true if the desire has been fulfilled, false in any other case</p>
+                          <hr/>
+
+                        </div>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Action init. ROS2 parameters</h5>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 20%;">Type</th>
+                              <th scope="col" style="width: 40%;">Description</th>
+                              <th scope="col" style="width: 20%;">Default</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                     </section>
                 </div>
               </section>
