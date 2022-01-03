@@ -162,15 +162,176 @@
             <div class="col-md-2"></div>
             <div class="col-md-10">
               <section id="docs-skills">
-                <h4>Skills</h4>
+                <h3>Skills</h3>
 
                 <div class="container-fluid text-start">
-                    <div id="sensors">
-                        <h5>Sensors</h5>
-                    </div>
-                    <div id="actions">
-                        <h5>Actions</h5>
-                    </div>
+                    <section id="sensors">
+                        <h4>Sensors</h4>
+                        <p>
+                          Setting up a sensor node for a ROS2-BDI agent is very simple. It mainly requires to create a cpp class inheriting 
+                          from the <a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/sensor.hpp">Sensor</a> 
+                          abstract class, as provided within the framework, implementing the constructor and the <span class="font-monospace">performSensing()</span>
+                          methods. Anything else is optional, not-required and strictly related to advanced logic specific to the sensor you might need. Keep in mind
+                          that the <a href="https://github.com/devis12/ROS2-BDI/blob/main/ros2_bdi_skills/include/ros2_bdi_skills/sensor.hpp">Sensor</a> class is nonetheless
+                          than an extension of the base <span class="font-monospace">rclcpp::Node</span> class providing additional features to easily and correctly manage
+                          the sensed properties forwarding them to update the belief set of the agent. This entails that any usual ROS2 node additional feature
+                          (e.g. topic subscription, calling/handling services....) you want to setup will be available, but it's suggested to strictly limit them
+                          in relation to the specific logic of the sensor.
+                        </p>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Sensor constructor</h5>
+                          <code>Sensor(const std::string& sensor_name, const ros2_bdi_interfaces::msg::Belief& proto_belief);</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>sensor_name</code></td>
+                                <td>Name for the sensor; must be unique among the nodes in the ROS2-BDI agent namespace</td>
+                              </tr>
+                              <tr>
+                                <td><code>proto_belief</code></td>
+                                <td>Belief prototype for the sensor</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <p>
+                            <span class="text-danger">IMPORTANT NOTE</span>: the behaviour of the sensor is strictly bounded to the prototype belief it'll work
+                            with (setup in the constructor and not updatable later on at run-time). This is done mainly because we imagine sensor nodes to be very ”task-specific” 
+                            in terms of detection, meaning that we could not
+                            have a single sensor detecting the distance from environmental objects on a given dimension in a
+                            three-dimensional space and at the same time recognizing what kind of objects they are. At a higher
+                            level, this is supposed to be interpreted as tasks for different sensors, even if it could be the case that
+                            both are accessing the same raw data stream.
+                          </p>
+                          <p>
+                            The belief prototype a sensor node is
+                            tightly bounded to has different implications depending on the belief type. They are all summarised
+                            in the following table.
+                          </p>
+                          <table class="table">
+                            <thead class="text-center bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Belief type</th>
+                              <th scope="col" style="width: 50%;">Sensing behaviour</th>
+                              <th scope="col" style="width: 30%;">Example</th>
+                            </thead>
+                            <tbody>
+                              
+                              <tr>
+                                <td class="text-center"><code>INSTANCE</code> <br /> <small> <code>pddl_type=1</code> </small> </td>
+                                <td>
+                                      The sensor node is bounded to a specific instance
+                                      class (e.g. agent, waypoint) and could detect just
+                                      the presence of instances of such type, i.e.
+                                      triggering their addition/deletion to/from the
+                                      belief set.
+                                </td>
+                                <td>
+                                  <pre><script>document.write(JSON.stringify({ name: "", pddl_type: 1, params: ["waypoint"] }, null, 4))</script></pre>
+                                  <small>Sensor bounded to trigger add/del of <span class="fw-bold">instances</span> of type <code>waypoint</code></small>
+                                </td>
+                              </tr>
+                              
+                              <tr>
+                                <td class="text-center"><code>PREDICATE</code> <br /> <small> <code>pddl_type=2</code> </small> </td>
+                                <td>
+                                      The sensor node is bounded to a specific
+                                      predicate definition (e.g. ”<span class="font-monospace">(in ?r - robot ?wp
+                                      - waypoint)</span>”), triggering either additions (or
+                                      deletions) to (or from) the belief set of predicates
+                                      of such type.
+                                </td>
+                                <td>
+                                  <pre><script>document.write(JSON.stringify({ name: "in", pddl_type: 2, params: ["", ""] }, null, 4))</script></pre>
+                                  <small>Sensor bounded to trigger add/del of ”in” <span class="fw-bold">predicates</span>, as per definition given in the PDDL domain defined for the agent</small>
+                                </td>
+                              </tr>
+                              
+                              <tr>
+                                <td class="text-center"><code>FLUENT</code> <br /> <small> <code>pddl_type=3</code> </small> </td>
+                                <td>
+                                      The sensor node is bounded to a specific function
+                                      instance (e.g. ”<span class="font-monospace">(battery charge ?cleaner 90)</span>”),
+                                      triggering first the addition (if not already there),
+                                      then the update of its value by always publishing
+                                      to the topic <span class="font-monospace">/agent_id/add_belief</span> for further explanation). This does not
+                                      imply that deletion is forbidden, but the most
+                                      common usage scenarios shouldn’t foresee it.
+                                </td>
+                                <td>
+                                  <pre><script>document.write(JSON.stringify({ name: "battery_charge", pddl_type: 3, params: ["cleaner"], value: 90 }, null, 4))</script></pre>
+                                  <small>Sensor bounded to trigger update of ”<code>battery_charge</code>” for ”<code>cleaner</code>” agent</small>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Sensing methods</h5>
+                          <p>
+                            Any Sensor node <span class="fw-bold">must</span> implement the virtual method <code>void performSensing()</code> specified in the 
+                            provided abstract class from which it's inheriting. The call will be regularly called respecting the value of the corresponding init.
+                            parameters and it's supposed to withold the logic responsible for the sensing operations. If and when these require to update the belief set in 
+                            some way, the <code>sense(belief, op)</code> API call is provided as described below and can be invoked within the <code>performSensing()</code> implementation.
+                          </p>
+                          <code>void sense(const ros2_bdi_interfaces::msg::Belief& belief, const UpdOperation& op);</code>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 80%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>belief</code></td>
+                                <td>
+                                  Belief to be added/updated/deleted to/from the belief set of the ROS2-BDI agent. <span class="fw-bold">MUST</span> be compliant to the <code>proto_belief</code>
+                                  specified in the constructor.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>op</code></td>
+                                <td>Specifying whether the belief must be added/updated/deleted, respectively the ammissible values are the following:
+                                  <code>{ADD, UPD, DEL}</code>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div class="container-fluid mb-5">
+                          <h5 class="text-primary">Sensor init. ROS2 parameters</h5>
+                          <table class="table">
+                            <thead class="bg-dark text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 20%;">Type</th>
+                              <th scope="col" style="width: 40%;">Description</th>
+                              <th scope="col" style="width: 20%;">Default</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>init_sleep</code></td>
+                                <td><span class="font-monospace">int</span></td>
+                                <td>Initial sleep period expressed in seconds for the sensor node, waiting for the first trigger of the <code>performSensing</code> call</td>
+                                <td><span class="font-monospace">0</span></td>
+                              </tr>
+                              <tr>
+                                <td><code>sensing_freq</code></td>
+                                <td><span class="font-monospace">float</span></td>
+                                <td>Frequency for calling <code>performSensing</code>, expressed in Hz</td>
+                                <td><span class="font-monospace">8.0</span></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                    </section>
+                    <section id="actions">
+                        <h4>Actions</h4>
+                    </section>
                 </div>
               </section>
             </div>
