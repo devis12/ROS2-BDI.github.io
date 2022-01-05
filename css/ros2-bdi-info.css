@@ -119,6 +119,10 @@ footer {
   color: #6610f2;
 }
 
+.method {
+  margin-bottom: 32px;
+}
+
 td,
 th {
   vertical-align: middle;
