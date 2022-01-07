@@ -15,6 +15,10 @@
 
     <link href="css/ros2-bdi-info.css" rel="stylesheet" />
 
+    <link rel="stylesheet"
+      href="highlight/styles/default.min.css">
+    <script src="highlight/highlight.min.js"></script>
+
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -165,14 +169,464 @@
                 <h3>Bringup</h3>
 
                 <div class="container-fluid text-start">
+                  <p>
+                    The bringup <span class="fw-bold text-danger">requires</span> essentially the following:
+                    <ul>
+                      <li><span class="fw-bold text-danger">PDDL domain</span> defined for the agent, expressing relevant objects and properties of the environment in which is put into wrt. to its knowledge.</li>
+                      <li>
+                        <span class="fw-bold text-danger">Action nodes</span> defined in the PDDL domain for the agent implemented by inheriting from the abstract class 
+                        <a href="skills.html#actions"><code>BDIActionExecutor</code></a>, respecting its requirements and exploiting the provided API calls enabling feedback on the progress, status and 
+                        leveraging communication among agents.
+                      </li>
+                    </ul>
+                  </p>
+                  
+                  <p>
+                    Other components <span class="fw-bold text-info">might be considered optional</span>, nonetheless you need to take them seriously to further boost the capabilities of your agent: 
+                    <ul>
+                      <li>
+                        <span class="fw-bold text-info">Sensor nodes</span> implemented by inheriting from the abstract class 
+                        <a href="skills.html#sensors"><code>Sensor</code></a>, respecting its requirements and exploiting the provided API calls leveraging the update of the corresponding belief set
+                        wrt. what's been detected and internal processing performed within the sensor. Technically, they're not necessary, but in most real scenarios you'd find them essential.
+                      </li>
+                      <li>
+                        <span class="fw-bold text-info">Core behaviour tuning</span> via the initialization parameters that can be specified (overriding the default ones)
+                        in the launch python script for the agent. They are all documented <a href="#params">below</a>.
+                      </li>
+                    </ul>
+                  </p>
+                </div>
+                
+                <div class="container-fluid text-start">
+                    
                     <section id="pddl">
                         <h4>PDDL domain example</h4>
+                        <p>
+                          The pddl file below is supposed to be a simple domain definition for a ROS2-BDI agent which acts as a cleaner.
+                        </p>
+                        <div class="row">
+                          <div class="col-lg-1"></div>
+                          <div class="col-lg-10">
+<pre class="text-light" style="border-radius: 2rem;">
+<code>
+  ;; domain file: cleaner-domain.pddl
+
+  (define (domain cleaner-domain)
+
+      (:requirements 
+        :strips :typing 
+        :fluents :durative-actions
+      )
+
+      ;; Types ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+      (:types
+          waypoint
+          robot
+      );; end Types ;;;;;;;;;;;;;;;;;;;;;;;;;
+
+      (:predicates
+          (in ?r - robot ?wp - waypoint)
+          (workfree ?r - robot)
+          (recharging_station ?wp - waypoint)
+          (cleaned ?wp - waypoint)
+      )
+
+      (:functions
+          (battery_charge ?r - robot)
+      )
+
+      (:durative-action movetoward
+          :parameters (?r - robot ?wp_from ?wp_to - waypoint)
+          :duration (= ?duration 4)
+          :condition (and
+              (at start (in ?r ?wp_from))
+              (at start (workfree ?r))
+              (at start (> (battery_charge ?r) 20))
+              (over all (> (battery_charge ?r) 10))
+          )
+          :effect (and
+              (at start (not(workfree ?r)))
+              (at start (not(in ?r ?wp_from)))
+              (at end (in ?r ?wp_to))
+              (at end (workfree ?r))
+              (at end (decrease (battery_charge ?r) 10))
+          )
+      )
+
+      (:durative-action doclean
+          :parameters (?r - robot ?wp - waypoint)
+          :duration (= ?duration 4)
+          :condition (and
+              (at start (workfree ?r))
+              (at start (> (battery_charge ?r) 30))
+              (over all (> (battery_charge ?r) 10))
+              (over all (in ?r ?wp))
+          )
+          :effect (and
+              (at start (not(workfree ?r)))
+              (at end (workfree ?r))
+              (at end (cleaned ?wp))
+              (at end (decrease (battery_charge ?r) 20))
+          )
+      )
+
+      (:durative-action recharge
+          :parameters (?r - robot ?wp - waypoint)
+          :duration (= ?duration 4)
+          :condition (and
+              (at start (workfree ?r))
+              (over all (in ?r ?wp))
+              (over all (recharging_station ?wp))
+          )
+          :effect (and
+              (at start (not(workfree ?r)))
+              (at end (workfree ?r))
+              (at end (assign (battery_charge ?r) 100))
+          )
+      )
+
+    )
+</code>
+</pre>
+                          </div>
+                          <div class="col-lg-1"></div>
+                        </div>
+
+                        <p>
+                          <br />
+                          <span class="fw-bold">Instances</span> of interest might be robotic agent (itself or others) and points of interest in a map.
+                          <br />
+                          <span class="fw-bold">Predicates</span> of interest are the following:
+                          <table class="table">
+                            <thead>
+                              <th scope="col" style="width: 36%;">Predicate</th>
+                              <th scope="col" style="width: 64%;">Semantic</th>
+                            </thead>
+                            <tbody>
+                              <tr>  
+                                <td><span class="font-monospace">(in ?r - robot ?wp - waypoint)</span></td>
+                                <td>robotic agent <span class="font-monospace">?r</span> is situated in <span class="font-monospace">?wp</span></td>
+                              </tr>
+                              <tr>  
+                                <td><span class="font-monospace">(workfree ?r - robot)</span></td>
+                                <td>robotic agent <span class="font-monospace">?r</span> is currently "free" to work</td>
+                              </tr>
+                              <tr>  
+                                <td><span class="font-monospace">(recharging_station ?wp - waypoint)</span></td>
+                                <td>robotic agents can recharge their battery in <span class="font-monospace">?wp</span></td>                              </tr>
+                              <tr>  
+                                <td><span class="font-monospace">(cleaned ?wp - waypoint)</span></td>
+                                <td><span class="font-monospace">?wp</span> is clean</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          The only property which probably needs further explanation is <span class="font-monospace">workfree</span>, which has been added to
+                          avoid the parallel execution of actions that are not supposed to run simultaneously (i.e. cleaning and
+                          recharging). It’s going to act as a sort of ”lock” for guaranteeing mutual exclusion and sequential
+                          execution among certain actions. It could seem a bit strange, but it’s important to avoid unpleasant
+                          situations in which the planner might think that they could be made run together. That’s an explicit
+                          condition specifically added to fulfill this purpose.
+                          <br />
+                          The only defined <span class="fw-bold">Function</span> takes track of the battery charge of a robotic agent.
+                        </p>
+                        <p>
+                          <span class="fw-bold">Actions</span> essentially defines when, which and how properties are supposed to be and change before, after and/or during
+                          their executions. The cleaner agent we have envisioned can essentially move, clean and recharge. <span class="fw-bold text-danger">IT'S REALLY
+                          IMPORTANT THAT THE FIRST PARAMETER OF EVERY ROS2-BDI ACTION DEFINED IN ITS PDDL DOMAIN WITHOLDS THE REFERENCE TO ITS <code>agent_id</code>
+                          value.</span> The user won't need to worry to put it there, if the provided <a href="#python">python</a> libraries are used to generate
+                          the launch description for the agent. The takeout information is that it's not possible to simply define a move, clean,... action, without 
+                          leaving room in the first argument for a reference to the agent, so the proper action executor node (the one belonging to the agent)
+                          will be selected and triggered when the action needs to be run.
+                        </p>
                     </section>
+
                     <section id="python">
                         <h4>Python bringup example</h4>
+                        <p>
+                          The following script can basically be copied and pasted in order to be tuned to comply with the user's needs. 
+                          It allows to easily generate a launch description to boot up all the ROS2-BDI core and auxiliary nodes as well as an instance of PlanSys2 for the agent,
+                          while hiding all the complexity. User just needs to put the reference for the implemented <a href="skills.html#sensors">Sensors</a> and <a href="skills.html#actions">Actions</a>. 
+                          as below, specifying the <a href="#params-required">required parameters</a> and the needed <a href="#params-tunable">tunable</a> ones too.
+                        </p>
+                        <pre style="border-radius: 2rem;">
+                          <code>
+import sys
+from ament_index_python.packages import get_package_share_directory
+
+ros2_bdi_bringup_dir = get_package_share_directory('ros2_bdi_bringup')
+sys.path.append(ros2_bdi_bringup_dir + '/launch/')
+from bdi_agent import AgentLaunchDescription
+from bdi_agent_skills import AgentAction
+from bdi_agent_skills import AgentSensor
+
+def generate_launch_description():
+    AGENT_ID = 'cleaner'
+    AGENT_GROUP_ID = 'cleaner'
+
+    bdi_tests_share_dir = get_package_share_directory('ros2_bdi_tests')
+
+    # perform moving toward
+    action_movetoward = AgentAction(
+        package='ros2_bdi_tests',
+        executable='movetoward_bdi',
+        name='movetoward'
+    )
+
+    # perform cleaning action
+    action_doclean = AgentAction(
+        package='ros2_bdi_tests',
+        executable='doclean_bdi',
+        name='doclean'
+    )
+    
+    # recharging action
+    action_recharge = AgentAction(
+        package='ros2_bdi_tests',
+        executable='recharge_bdi',
+        name='recharge'
+    )
+
+    # waypoint sensor 
+    wp_sensor = AgentSensor(
+        package='ros2_bdi_tests',
+        executable='wp_sensor',
+        name='wp_sensor',
+        specific_params=[
+            {"init_sleep": 2}
+        ])
+
+    ld = AgentLaunchDescription(
+        agent_id=AGENT_ID,
+        agent_group=AGENT_GROUP_ID,
+        init_params={
+            'pddl_file': bdi_tests_share_dir + '/pddl/cleaner_simple/cleaner-domain.pddl',
+            'init_bset': bdi_tests_share_dir + '/launch/init_cleaner_simple/init_bset.yaml',
+            'init_dset': bdi_tests_share_dir + '/launch/init_cleaner_simple/init_dset.yaml',
+            'autosub_prec': True,
+            'autosub_cont': True,
+            'reschedule_policy': 'NO_PREEMPT'
+        },
+        actions=[action_movetoward, action_doclean, action_recharge],
+        sensors=[wp_sensor]
+    ) 
+
+    return ld
+                          </code>
+                        </pre>
                     </section>
                     <section id="params">
-                        <h4>Tunable parameters</h4>
+                        <h4>Launch Parameters</h4>
+                        
+                        <div id="params-required">
+                          <h5 class="text-danger">Required parameters</h5>
+                          <p>
+                            For every agent, the user must define:
+                            <ul>
+                              <li>its unique id</li>
+                              <li>the id for the agents’ group it belongs to</li>
+                              <li>
+                                  its PDDL domain expressing the relevant part of the world it’s interested in and the actions it’s capable
+                                  of carrying on
+                              </li>
+                            </ul>
+                            If any of these three parameters were missing, the ROS2 BDI agent wouldn’t be able
+                            to operate properly. Hence, they are handled as mandatory parameters that need to be passed to
+                            the script building a launch description for it, causing an immediate crash if are not there.
+                          </p>
+                          <table class="table table-hover">
+                            <thead class="bg-danger text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 16%;">Type</th>
+                              <th scope="col" style="width: 64%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>agent_id</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td>Unique id for the given agent, defining
+                                    the prefix for all of its nodes, topics and
+                                    services. It’s left to the user the task of
+                                    ensuring that there are no agents
+                                    sharing the same id.  
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>agent_group</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td>
+                                    Shared id for a group of agents the
+                                    given agent belongs to. This is
+                                    necessary to allow or forbid certain
+                                    communication exchanges.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>pddl_file</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td>
+                                    Filepath to the PDDL domain loaded
+                                    by the PlanSys2 instance of the agent,
+                                    defining everything relevant to the
+                                    agent wrt. the environment it’s put into
+                                    and the actions is capable of executing.
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+
+                        <div id="params-tunable">
+                          <h5 class="text-info">Tunable parameters</h5>
+                          <p>
+                            Many of the ROS2-BDI agent behaviours can be properly tune
+                            wrt. the properties of the agent and/or the context in which it ends up operating.
+                            The user can tune them via the following parameters detailed in the table below.
+                            Note how all of them have already some default values: it's up to the user to change them or not.
+                          </p>
+                          <table class="table table-hover">
+                            <thead class="bg-info text-light">
+                              <th scope="col" style="width: 20%;">Parameter</th>
+                              <th scope="col" style="width: 16%;">Type</th>
+                              <th scope="col" style="width: 16%;">Default value</th>
+                              <th scope="col" style="width: 48%;">Description</th>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td><code>init_bset</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>Filepath to YAML file compliant
+                                    to the BeliefSet value prototype definition, which is 
+                                    nonetheless than an array of <a href="messages.html#belief">Belief</a>
+                                    describing the initial current vision of the world of the ready-to-be launched 
+                                    ROS2-BDI agent. If missing, the set is initialized as empty.  
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>init_dset</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>Filepath to YAML file compliant
+                                    to the DesireSet value prototype definition, which is 
+                                    nonetheless than an array of <a href="messages.html#desire">Desire</a>. 
+                                    describing the initial current set of desirable state of the world for the ready-to-be launched 
+                                    ROS2-BDI agent. If missing, the set is initialized as empty.   
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>reschedule_policy</code></td>
+                                <td><span class="font-monospace">enum<br />{PREEMPT, NO_PREEMPT}</span></td>
+                                <td><span class="font-monospace">NO_PREEMPT</span></td>
+                                <td>
+                                  Defines rescheduling policy:
+                                  <ul>
+                                    <li>with preemption (PREEMPT)</li>
+                                    <li>no preemption (NO_PREEMPT)</li>
+                                  </ul>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>comp_plan_tries</code></td>
+                                <td><span class="font-monospace">integer <br />in [1-&#8734;]</span></td>
+                                <td><span class="font-monospace">16</span></td>
+                                <td>
+                                  Number of times the ROS2-BDI agent
+                                  tries to compute a plan for a
+                                  desire before discarding it.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>exec_plan_tries</code></td>
+                                <td><span class="font-monospace">integer <br />in [1-&#8734;]</span></td>
+                                <td><span class="font-monospace">16</span></td>
+                                <td>
+                                  Number of times the ROS2-BDI agent
+                                  demands the execution of a plan for a
+                                  desire before discarding the latter.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>autosub_prec</code></td>
+                                <td><span class="font-monospace">boolean</span></td>
+                                <td><span class="font-monospace">False</span></td>
+                                <td>
+                                  If <span class="font-monospace">True</span>, performs preconditions autosubmission, meaning
+                                  that one or more desires will be autosubmitted by the ROS2-BDI agent to fulfill the unsatisfied preconditions
+                                  of a desire currently present in its desire set. They will be set with a slightly higher priority than the original desire.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>autosub_context</code></td>
+                                <td><span class="font-monospace">boolean</span></td>
+                                <td><span class="font-monospace">False</span></td>
+                                <td>
+                                  If <span class="font-monospace">True</span>, performs context autosubmission, meaning
+                                  that one or more desires will be autosubmitted by the ROS2-BDI agent to fulfill the unsatisfied context conditions
+                                  of a desire currently present in its desire set. They will be set with a slightly lower priority than the original desire.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>rtc_deadline</code></td>
+                                <td><span class="font-monospace">integer <br />in [1-&#8734;]</span></td>
+                                <td><span class="font-monospace">2.0</span></td>
+                                <td>
+                                  <code>rtc_deadline*target_desire.deadline</code>
+                                  represents the limited time before
+                                  the Plan Director requests the
+                                  abortion of the current plan in
+                                  execution fulfilling <code>target_desire</code>.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>belief_ck</code></td>
+                                <td><span class="font-monospace">string[]</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>
+                                  List of agents’ groups whose belief <span class="font-monospace">CHECK</span> requests can be accepted
+                                  by the ROS2-BDI agent.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>belief_w</code></td>
+                                <td><span class="font-monospace">string[]</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>
+                                  List of agents’ groups whose belief <span class="font-monospace">WRITE</span> requests can be accepted
+                                  by the ROS2-BDI agent.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>desire_ck</code></td>
+                                <td><span class="font-monospace">string[]</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>
+                                  List of agents’ groups whose desire <span class="font-monospace">CHECK</span> requests can be accepted
+                                  by the ROS2-BDI agent.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>desire_w</code></td>
+                                <td><span class="font-monospace">string[]</span></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>
+                                  List of agents’ groups whose desire <span class="font-monospace">WRITE</span> requests can be accepted
+                                  by the ROS2-BDI agent.
+                                </td>
+                              </tr>
+                              <tr>
+                                <td><code>desire_pr</code></td>
+                                <td><span class="font-monospace">float[]</span> <br /> <small>values in <span class="font-monospace">[0-1]</span></small></td>
+                                <td><span class="font-monospace">[]</span></td>
+                                <td>
+                                  <code>desire pr[i]</code> is the max accepted
+                                  priority for a desire addition
+                                  requested by agents belonging to
+                                  the agent group <code>desire_w[i]</code>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
                     </section>
                 </div>
               </section>
@@ -191,4 +645,5 @@
       </div>
     </footer>
   </body>
+  <script>hljs.highlightAll();</script>
 </html>

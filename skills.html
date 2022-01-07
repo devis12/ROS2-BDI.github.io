@@ -149,7 +149,7 @@
                         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                           <li><a href="bringup.html#pddl" class="link-dark rounded">PDDL domain example</a></li>
                           <li><a href="bringup.html#python" class="link-dark rounded">Python bringup example</a></li>
-                          <li><a href="bringup.html#params" class="link-dark rounded">Tunable parameters</a></li>
+                          <li><a href="bringup.html#params" class="link-dark rounded">Launch parameters</a></li>
                         </ul>
                       </div>
                     </div>
@@ -163,6 +163,14 @@
             <div class="col-md-10">
               <section id="docs-skills">
                 <h3>Skills</h3>
+
+                <div style="border-radius: 2rem;" class="container-fluid bg-secondary text-light text-start w-50 mx-auto mt-5 pt-2 pb-2">
+                  <h6 class="fw-bold">Tip!</h6>
+                  <p>
+                    Check <a href="https://github.com/devis12/ROS2-BDI/tree/main/ros2_bdi_tests" style="color:aliceblue">ros2_bdi_tests</a> for demo examples regarding
+                    the implementation, dependencies needed for the package(s) in which sensor/action nodes are implemented.
+                  </p>
+                </div>
 
                 <div class="container-fluid text-start">
                     <section id="sensors">
@@ -275,7 +283,7 @@
 
                         <div class="container-fluid mb-5">
                           <h5 class="text-primary">Sensing methods</h5>
-                          <code style="padding-top: 0.32rem; padding-bottom: 0.32rem;"><span class="text-success">void </span> <span class="fw-bold">performSensing</span>()</code>
+                          <code class="pt-2 pb-2"><span class="text-success">void </span> <span class="fw-bold">performSensing</span>()</code>
                           <p>
                             Any Sensor node <span class="fw-bold bg-warning">must implement</span> the virtual method <code>void performSensing()</code> specified in the 
                             provided abstract class from which it's inheriting. The call will be regularly called respecting the value of the corresponding init.
@@ -371,7 +379,7 @@
                           <h5 class="text-primary">Action Executor progress/status methods</h5>
 
                           <div class="method">
-                            <code style="padding-top: 0.32rem; padding-bottom: 0.32rem;"><span class="text-success">float </span> <span class="fw-bold">advanceWork</span>()</code>
+                            <code class="pt-2 pb-2"></code><span class="text-success">float </span> <span class="fw-bold">advanceWork</span>()</code>
                              <p>
                               Any BDIActionExecutor node <span class="fw-bold bg-warning">must implement</span> the virtual method <code>float advanceWork()</code> specified in the 
                               provided abstract class from which it's inheriting. The call will be regularly called respecting the value of the corresponding init.
