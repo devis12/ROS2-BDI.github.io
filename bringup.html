@@ -333,10 +333,14 @@
                           <span class="fw-bold">Actions</span> essentially defines when, which and how properties are supposed to be and change before, after and/or during
                           their executions. The cleaner agent we have envisioned can essentially move, clean and recharge. <span class="fw-bold text-danger">IT'S REALLY
                           IMPORTANT THAT THE FIRST PARAMETER OF EVERY ROS2-BDI ACTION DEFINED IN ITS PDDL DOMAIN WITHOLDS THE REFERENCE TO ITS <code>agent_id</code>
-                          value.</span> The user won't need to worry to put it there, if the provided <a href="#python">python</a> libraries are used to generate
+                          value </span>. 
+                          The user won't need to worry to put it there, if the provided <a href="#python">python</a> libraries are used to generate
                           the launch description for the agent. The takeout information is that it's not possible to simply define a move, clean,... action, without 
                           leaving room in the first argument for a reference to the agent, so the proper action executor node (the one belonging to the agent)
                           will be selected and triggered when the action needs to be run.
+                          <br/>
+                          <u>NOTE</u>: This is not valid anymore if you break the default behaviour by setting <code>agent_id_as_specialized_arg</code> to 
+                          <code> <span class="fst-italic text-dark">false</span></code>, go back <a href="skills.html#actions" class="link-dark rounded">here</a> for further info.
                         </p>
                     </section>
 
@@ -514,6 +518,16 @@ def generate_launch_description():
                                 </td>
                               </tr>
                               <tr>
+                                <td><code>init_reactive_rules_set</code></td>
+                                <td><span class="font-monospace">string</span></td>
+                                <td><span class="font-monospace">null</span></td>
+                                <td>Filepath to YAML file containing an array of items compliant
+                                    to the Event Listener rules that are specified <a href="messages.html#el-rule">here</a>.
+                                    The conditions are checked every time a new belief set update is received to see if a condition matches, entailing further
+                                    updates to the belief and/or desire set.
+                                </td>
+                              </tr>
+                              <tr>
                                 <td><code>reschedule_policy</code></td>
                                 <td><span class="font-monospace">enum<br />{PREEMPT, NO_PREEMPT}</span></td>
                                 <td><span class="font-monospace">NO_PREEMPT</span></td>
@@ -638,7 +652,7 @@ def generate_launch_description():
 
     <footer class="footer mt-auto py-3 font-small text-light">
       <div class="container footer-copyright text-center">
-        © 2021 Copyright:
+        © 2022 Copyright:
         <a style="color: white" href="mailto:devisdalmoro@gmail.com"
           >Dal Moro Devis</a
         >

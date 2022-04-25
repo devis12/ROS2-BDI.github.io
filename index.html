@@ -188,7 +188,7 @@
               <div id="div-architecture" class="col-xxl-6">
                 <img
                   id="img-architecture"
-                  src="img/architecture.png"
+                  src="img/PAAMS_ROS2xBDI_0.75arch.png"
                   style="vertical-align: middle"
                   class="rounded img-fluid w-100 mx-auto"
                   alt="Architecture for ROS2-BDI"
@@ -196,7 +196,7 @@
               </div>
 
               <div id="div-node-tables" class="col-xxl-6">
-                <h6 class="text-green mt-3">Core nodes</h6>
+                <h4 class="text-green mt-5 fw-bold">Core nodes</h4>
                 <table class="table table-striped">
                   <thead class="thead-core">
                     <tr>
@@ -206,7 +206,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>PlanSys2 Monitor</td>
+                      <td class="fw-bold">PlanSys2 Monitor</td>
                       <td>
                         Regularly calls PlanSys2 nodes’ services to check their
                         respective status and publishes them to
@@ -217,7 +217,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>Belief Manager</td>
+                      <td class="fw-bold">Belief Manager</td>
                       <td>
                         It manages the agent’s beliefs: from initialization to
                         handling the callbacks behind
@@ -232,7 +232,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>Scheduler</td>
+                      <td class="fw-bold">Scheduler</td>
                       <td>
                         It manages the agent’s desires: from initialization to
                         handling the callbacks behind
@@ -249,7 +249,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>Plan Director</td>
+                      <td class="fw-bold">Plan Director</td>
                       <td>
                         Handles plan execution and abortion requests to be
                         forwarded to PlanSys2’s Executor. Regularly notifies its
@@ -259,7 +259,14 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>Communication</td>
+                      <td class="fw-bold">Event Listener</td>
+                      <td>
+                        Based on a set of statically defined rules, implements the belief revision function and 
+                        option generation function of the agent reasoning loop
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="fw-bold">MA (Multi-Agent) Request Handler</td>
                       <td>
                         Handles belief or desire addition/deletion requests
                         forwarded by other agents, enforcing the specified
@@ -270,7 +277,7 @@
                   </tbody>
                 </table>
 
-                <h6 class="text-teal mt-3">Agent-specific nodes (skills)</h6>
+                <h4 class="text-teal mt-5 fw-bold">Agent-specific nodes (skills)</h4>
                 <table class="table table-striped">
                   <thead class="thead-skills">
                     <tr>
@@ -280,7 +287,7 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <td>Sensor</td>
+                      <td class="fw-bold">Sensor</td>
                       <td>
                         Regularly performs a sensing operation which leads to
                         request an addition, a deletion or an update within the
@@ -292,7 +299,7 @@
                       </td>
                     </tr>
                     <tr>
-                      <td>Action Executor</td>
+                      <td class="fw-bold">Action Executor</td>
                       <td>
                         Handles the execution advancement of an action.
                         Triggered by PlanSys2’s Executor, communicate with it to
@@ -313,7 +320,7 @@
 
     <footer class="footer mt-auto py-3 font-small text-light">
       <div class="container footer-copyright text-center">
-        © 2021 Copyright:
+        © 2022 Copyright:
         <a style="color: white" href="mailto:devisdalmoro@gmail.com"
           >Dal Moro Devis</a
         >

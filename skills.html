@@ -191,20 +191,37 @@
                           <h5 class="text-primary">Sensor constructor</h5>
 
                           <div class="method">
-                            <code><span class="fw-bold">Sensor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> sensor_name, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> proto_belief)</code>
+                            <code><span class="fw-bold">Sensor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> sensor_name, 
+                                <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> proto_belief,
+                                <span class="text-indigo">const</span> <span class="text-success">bool</span> match_param_by_param = <span class="fst-italic text-dark">true</span>, 
+                                <span class="text-indigo">const</span> <span class="text-success">bool</span> enable_perform_sensing = <span class="fst-italic text-dark">true</span>)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 15%;" class="text-center">Required</th>
+                                <th scope="col" style="width: 65%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
                                   <td><code>sensor_name</code></td>
+                                  <td class="text-center"><i class="fas fa-check-circle"></i></td>
                                   <td>Name for the sensor; must be unique among the nodes in the ROS2-BDI agent namespace</td>
                                 </tr>
                                 <tr>
                                   <td><code>proto_belief</code></td>
+                                  <td class="text-center"><i class="fas fa-check-circle"></i></td>
                                   <td>Belief prototype for the sensor</td>
+                                </tr>
+                                <tr>
+                                  <td><code>match_param_by_param</code></td>
+                                  <td class="text-center"><i class="fas fa-slash"></i></td>
+                                  <td> Defines whether in a function/fluent sensing all params should match or not (default behaviour is set to <code><span class="fst-italic text-dark">true</span></code>
+                                    to match the rule defined in the table below, but you can override it so that fluent/function case is basically equivalent to the one of the predicate-type prototype.</td>
+                                </tr>
+                                <tr>
+                                  <td><code>enable_perform_sensing</code></td>
+                                  <td class="text-center"><i class="fas fa-slash"></i></td>
+                                  <td>Default behaviour is to have a periodic sensing callback, but one can disable it to invoke the <code>sense()</code> call exclusively in other (subscription) callbacks</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -285,7 +302,7 @@
                           <h5 class="text-primary">Sensing methods</h5>
                           <code class="pt-2 pb-2"><span class="text-success">void </span> <span class="fw-bold">performSensing</span>()</code>
                           <p>
-                            Any Sensor node <span class="fw-bold bg-warning">must implement</span> the virtual method <code>void performSensing()</code> specified in the 
+                            Assuming the default behaviour (i.e. <code>enable_perform_sensing</code> set to <code><span class="fst-italic text-dark">true</span></code>), any Sensor node <span class="fw-bold bg-warning">must implement</span> the virtual method <code>void performSensing()</code> specified in the 
                             provided abstract class from which it's inheriting. The call will be regularly called respecting the value of the corresponding init.
                             parameters and it's supposed to withold the logic responsible for the sensing operations. If and when these require to update the belief set in 
                             some way, the <code>sense(belief, op)</code> API call is provided as described below and can be invoked within the <code>performSensing()</code> implementation.
@@ -296,8 +313,8 @@
                                     <span class="fw-bold">sense</span>(<span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief, <span class="text-indigo">const</span> <span class="text-success">UpdOperation&</span> op)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -322,10 +339,10 @@
                           <h5 class="text-primary">Sensor init. ROS2 parameters</h5>
                           <table class="table">
                             <thead class="bg-dark text-light">
-                              <th scope="col" style="width: 20%;">Parameter</th>
-                              <th scope="col" style="width: 20%;">Type</th>
-                              <th scope="col" style="width: 40%;">Description</th>
-                              <th scope="col" style="width: 20%;">Default</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Type</th>
+                              <th scope="col" style="width: 40%;" class="text-center">Description</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Default</th>
                             </thead>
                             <tbody>
                               <tr>
@@ -355,20 +372,32 @@
                           <h5 class="text-primary">Action constructor</h5>
 
                           <div class="method">
-                            <code><span class="fw-bold">BDIActionExecutor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> action_name, <span class="text-indigo">const</span> <span class="text-success">int&</span> working_freq)</code>
+                            <code><span class="fw-bold">BDIActionExecutor</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> action_name, 
+                                <span class="text-indigo">const</span> <span class="text-success">int&</span> working_freq,
+                                <span class="text-indigo">const</span> <span class="text-success">bool</span> agent_id_as_specialized_arg = <span class="fst-italic text-dark">true</span>)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 15%;" class="text-center">Required</th>
+                                <th scope="col" style="width: 65%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
                                   <td><code>action_name</code></td>
+                                  <td class="text-center"><i class="fas fa-check-circle"></i></td>
                                   <td>Name for the action; should match the one within the pddl domain definition</td>
                                 </tr>
                                 <tr>
                                   <td><code>working_freq</code></td>
+                                  <td class="text-center"><i class="fas fa-check-circle"></i></td>
                                   <td>Frequency at which the <span class="font-monospace">doWork</span> method is called (expressed in Hz)</td>
+                                </tr>
+                                <tr>
+                                  <td><code>agent_id_as_specialized_arg</code></td>
+                                  <td class="text-center"><i class="fas fa-slash"></i></td>
+                                  <td>Set to <code><span class="fst-italic text-dark">true</span></code> if the action node should contain within its ROS2 parameters, the agent id, entailing 
+                                  that only actions that contains within their arguments the <code>agent_id</code> will trigger and progress the enforcement of the action via the logic defined 
+                                  in this Action Executor node</td>
                                 </tr>
                               </tbody>
                             </table>
@@ -413,8 +442,8 @@
                             <code><span class="text-success">void </span> <span class="fw-bold">execSuccess</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> success_log)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -437,8 +466,8 @@
                              <code><span class="text-success">void </span> <span class="fw-bold">execFailed</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> err_log)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -461,8 +490,8 @@
                                 <span class="fw-bold">sendCheckBeliefRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -484,8 +513,8 @@
                                 <span class="fw-bold">sendUpdBeliefRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#belief" class="text-success">ros2_bdi_interfaces::msg::Belief</a>&</span> belief, <span class="text-indigo">const</span> <span class="text-success">BDICommunications::UpdOperation&</span> op)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -511,8 +540,8 @@
                                 <span class="fw-bold">sendCheckDesireRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -534,8 +563,8 @@
                                 <span class="fw-bold">sendUpdDesireRequest</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire, <span class="text-indigo">const</span> <span class="text-success">BDICommunications::UpdOperation&</span> op, <span class="text-indigo">const</span> <span class="text-success">bool&</span> monitor_fulfill)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -565,8 +594,8 @@
                                 <span class="fw-bold">isMonitoredDesireFulfilled</span>(<span class="text-indigo">const</span> <span class="text-success">std::string&</span> agent_ref, <span class="text-indigo">const</span> <span class="text-success"><a href="messages.html#desire" class="text-success">ros2_bdi_interfaces::msg::Desire</a>&</span> desire)</code>
                             <table class="table">
                               <thead class="bg-dark text-light">
-                                <th scope="col" style="width: 20%;">Parameter</th>
-                                <th scope="col" style="width: 80%;">Description</th>
+                                <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                                <th scope="col" style="width: 80%;" class="text-center">Description</th>
                               </thead>
                               <tbody>
                                 <tr>
@@ -589,17 +618,17 @@
                           <h5 class="text-primary">Action init. ROS2 parameters</h5>
                           <table class="table">
                             <thead class="bg-dark text-light">
-                              <th scope="col" style="width: 20%;">Parameter</th>
-                              <th scope="col" style="width: 20%;">Type</th>
-                              <th scope="col" style="width: 40%;">Description</th>
-                              <th scope="col" style="width: 20%;">Default</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Parameter</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Type</th>
+                              <th scope="col" style="width: 40%;" class="text-center">Description</th>
+                              <th scope="col" style="width: 20%;" class="text-center">Default</th>
                             </thead>
                             <tbody>
                               <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
+                                <td class="text-center">-</td>
                               </tr>
                             </tbody>
                           </table>
@@ -615,7 +644,7 @@
 
     <footer class="footer mt-auto py-3 font-small text-light">
       <div class="container footer-copyright text-center">
-        © 2021 Copyright:
+        © 2022 Copyright:
         <a style="color: white" href="mailto:devisdalmoro@gmail.com"
           >Dal Moro Devis</a
         >

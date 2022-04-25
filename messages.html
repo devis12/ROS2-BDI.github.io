@@ -797,6 +797,102 @@
                             </div>
                         </div>
                     </section>
+                    <section id="el-rules">
+                        <div class="mb-3">
+                            <h4>Event Listener Rule</h4>
+                            <div class="row mx-auto">
+
+                                <div class="col-xl-5 my-auto">
+                                    <table class="w-100 bg-secondary text-light rounded mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">Event Listener Rule</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>condition</td>
+                                                <td><a class="text-white" href="#condition">ConditionsDNF</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>reactive_rules</td>
+                                                <td>ReactiveRule[]</td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                    
+                                    <table class="w-100 bg-secondary text-light rounded mt-2 mb-1">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="text-warning" style="width: 60%;">Reactive Rule</th>
+                                                <th scope="col" style="width: 40%;"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-monospace">
+                                            <tr>
+                                                <td>set</td>
+                                                <td>"belief" | "desire"</td>
+                                            </tr>
+                                            <tr>
+                                                <td>operation</td>
+                                                <td>"ADD" | "DEL"</td>
+                                            </tr>
+                                            <tr>
+                                                <td>value</td>
+                                                <td><a class="text-white" href="#belief">Belief</a> | <a class="text-white" href="#desire">Desire</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table> 
+                                </div>
+
+                                <div class="col-xl-7">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <th scope="col" style="width: 10%;"></th>
+                                            <th scope="col" style="width: 90%;"></th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Description</td>
+                                                <td>
+                                                    Contains <span class="fw-bold font-monospace">condition -> belief/desire</span> updates to be made at run time when the 
+                                                    <span class="fw-bold font-monospace">condition</span> is verified, enforcing belief revision or option generation function rules.
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Parameters</td>
+                                                <td>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">condition</span>
+                                                        Logical expression which needs to be satisfied when checked against the belief set of the agent in order to apply the reactive rules
+                                                    </p>
+                                                    <p>
+                                                        <span class="fw-bold font-monospace">reactive_rules</span>
+                                                        List of updates to be performed in the form: target set ("belief" | "desire"), update ("ADD" | "DEL") and value (belief or desire item to be added or deleted). Value must 
+                                                        be compliant to the target set, otherwise rule will not be considered, since it's bad formatted.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="fst-italic border-right-gray">Usage</td>
+                                                <td>
+                                                    <ul>
+                                                        <li>
+                                                            Encapsulated as a list, the agent's Event Listener node constantly checks them whenever a new Belief Set update notification arrives, enforcing any
+                                                            update rule if the respective condition is satisfied.
+                                                        </li>
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            </div>
+                        </div>
+                    </section>
+                    
                 </div>
             </div>
             </div>
@@ -807,7 +903,7 @@
 
     <footer class="footer mt-auto py-3 font-small text-light">
       <div class="container footer-copyright text-center">
-        © 2021 Copyright:
+        © 2022 Copyright:
         <a style="color: white" href="mailto:devisdalmoro@gmail.com"
           >Dal Moro Devis</a
         >
